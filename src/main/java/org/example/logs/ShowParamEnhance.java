@@ -86,7 +86,6 @@ public class ShowParamEnhance {
      */
     @Around("section()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        log.info("111");
         long startTime = System.currentTimeMillis();
         Throwable throwable = null;
         //目标方法执行结果

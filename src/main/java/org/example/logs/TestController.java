@@ -20,7 +20,6 @@ public class TestController {
     @GetMapping("/test01")
     @ShowParam(dataPersistence = true)
     public String test01(String userName, String password) {
-        int i = 1 / 0;
         return "有参数，全部展示" + userName + "-" + password;
     }
 
