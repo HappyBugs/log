@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "log",
+      "type": "org.example.logs.LogConfig",
+      "sourceType": "org.example.logs.LogConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "log.params",
+      "type": "java.util.Map<org.example.logs.LogConfig$LogConfigKey,java.lang.String>",
+      "description": "配置列表",
+      "sourceType": "org.example.logs.LogConfig"
+    }
+  ],
+  "hints": []
+}
