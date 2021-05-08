@@ -58,7 +58,7 @@ public class LogConfig {
      */
     private void defaultPath() {
         //默认的持久化地址
-        String defaultPath = "E:\\logs";
+        String defaultPath = "H:\\logs";
         params.put(LogConfigKey.path, defaultPath);
     }
 

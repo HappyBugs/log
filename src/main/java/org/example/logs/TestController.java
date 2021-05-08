@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping("/test")
-    @ShowParam
+    @ShowParam(dataPersistence = true)
     public String test() {
         return "无参数，全部展示";
     }

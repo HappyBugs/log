@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author 李昆城
  */
 @Slf4j
-@EnableAsync
 @Component
 public class LogEventPublisher implements ApplicationEventPublisherAware {
 
@@ -48,7 +47,6 @@ public class LogEventPublisher implements ApplicationEventPublisherAware {
      *
      * @param logEvent 配送任务参数对象
      */
-    @Async
     public void publishEvent(LogEvent logEvent) {
         if (Objects.isNull(logEvent)) {
             return;

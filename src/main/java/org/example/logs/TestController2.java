@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ShowParam
 @RestController
-public class TestCOntroller2 {
+public class TestController2 {
 
     @GetMapping("/test2/test")
     public String test(String userName, String password) {

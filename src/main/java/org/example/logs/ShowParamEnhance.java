@@ -10,9 +10,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.example.logs.observice.LogEvent;
 import org.example.logs.observice.LogEventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,9 +99,9 @@ public class ShowParamEnhance {
             throw t;
         } finally {
             long endTime = System.currentTimeMillis();
+            //新开一个线程执行收参数收集信息
             threadPoolExecutor.execute(enhance(point, proceed, throwable, startTime, endTime));
         }
-        //新开一个线程执行收参数收集信息
         return proceed;
     }
 
@@ -158,8 +160,28 @@ public class ShowParamEnhance {
         String[] parameterNames = signature.getParameterNames();
         Map<String, Object> params = new HashMap<>(args.length);
         for (int i = 0; i < args.length; i++) {
-            Object value = args[i];
+            //参数名称
             String parameterName = parameterNames[i];
+            //判断是否为常用的特殊类型
+            if (args[i] instanceof HttpServletRequest) {
+                params.put(parameterName, "request");
+                continue;
+            }
+            if (args[i] instanceof HttpServletResponse) {
+                params.put(parameterName, "response");
+                continue;
+            }
+            if (args[i] instanceof MultipartFile) {
+                params.put(parameterName, "multipartFile");
+                continue;
+            }
+            Object value;
+            try {
+                value = args[i];
+            } catch (Exception e) {
+                params.put(parameterName, e.getMessage());
+                continue;
+            }
             params.put(parameterName, value);
         }
         return JSON.toJSONString(params);
@@ -205,7 +227,6 @@ public class ShowParamEnhance {
      * @param startTime 开始执行时间
      * @param endTime   截止执行时间
      */
-    @Async
     public Runnable enhance(ProceedingJoinPoint point, Object resultObj, Throwable throwable, Long startTime, Long endTime) {
         return () -> {
             Object target = point.getTarget();
@@ -262,7 +283,8 @@ public class ShowParamEnhance {
             }
             //进行持久化操作
             LogEvent logEvent = new LogEvent(annotation).targetAddress(fullMethodPath).param(paramString)
-                    .result(resultString).startTime(startTime).endTime(endTime).errorMsg(errorMsg).errorLocation(errorLocation);
+                    .result(resultString).startTime(startTime).endTime(endTime).errorMsg(errorMsg).errorLocation(errorLocation)
+                    .persistenceAddress(annotation.path());
             logEventPublisher.publishEvent(logEvent);
         };
     }

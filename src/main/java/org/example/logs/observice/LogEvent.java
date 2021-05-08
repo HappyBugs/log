@@ -1,6 +1,5 @@
 package org.example.logs.observice;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 
@@ -9,7 +8,6 @@ import org.springframework.context.ApplicationEvent;
  *
  * @author 李昆城
  */
-@Getter
 @Setter
 public class LogEvent extends ApplicationEvent {
 
@@ -57,6 +55,10 @@ public class LogEvent extends ApplicationEvent {
      * 截止时间
      */
     private Long endTime;
+    /**
+     * 持久化地址，不传递则使用默认值
+     */
+    private String persistenceAddress;
 
 
     public LogEvent targetAddress(String targetAddress) {
@@ -75,7 +77,7 @@ public class LogEvent extends ApplicationEvent {
     }
 
     public LogEvent errorMsg(String errorMsg) {
-        this.setResult(errorMsg);
+        this.setErrorMsg(errorMsg);
         return this;
     }
 
@@ -94,5 +96,46 @@ public class LogEvent extends ApplicationEvent {
         return this;
     }
 
+    public LogEvent persistenceAddress(String persistenceAddress) {
+        this.setPersistenceAddress(persistenceAddress);
+        return this;
+    }
 
+
+    @Override
+    public Object getSource() {
+        return source;
+    }
+
+    public String getTargetAddress() {
+        return "目标方法："+targetAddress;
+    }
+
+    public String getParam() {
+        return "参数信息："+param;
+    }
+
+    public String getResult() {
+        return "返回值："+result;
+    }
+
+    public String getErrorMsg() {
+        return "错误消息："+errorMsg;
+    }
+
+    public String getErrorLocation() {
+        return "部分错误地址："+errorLocation;
+    }
+
+    public Long getStartTime() {
+        return startTime;
+    }
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public String getPersistenceAddress() {
+        return persistenceAddress;
+    }
 }

@@ -31,7 +31,7 @@ public @interface ShowParam {
      *
      * @return true：需要持久化 false：不持久化
      */
-    boolean dataPersistence() default false;
+    boolean dataPersistence() default true;
 
     /**
      * 持久化的地址
